@@ -1,8 +1,6 @@
 package com.example.myapplication.network
 
-import com.example.myapplication.model.CepData
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.myapplication.model.Entity.CepData
 import retrofit2.http.GET
 import retrofit2.http.Path
 

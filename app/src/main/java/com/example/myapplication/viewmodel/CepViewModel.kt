@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.repository.CepRepository
-import com.example.myapplication.model.CepData
+import com.example.myapplication.model.Entity.CepData
 import com.example.myapplication.network.ConnectivityManager
 import kotlinx.coroutines.launch
 import retrofit2.HttpException

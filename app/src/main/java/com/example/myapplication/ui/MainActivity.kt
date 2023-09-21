@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.R
-import com.example.myapplication.model.RetrofitClient
+import com.example.myapplication.model.Entity.RetrofitClient
 import com.example.myapplication.network.ConnectivityManager
 import com.example.myapplication.repository.CepRepositoryImpl
 import com.example.myapplication.viewmodel.CepViewModel
