@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.R
 import com.example.myapplication.model.RetrofitClient
+import com.example.myapplication.network.ConnectivityManager
 import com.example.myapplication.repository.CepRepositoryImpl
 import com.example.myapplication.viewmodel.CepViewModel
 import com.example.myapplication.viewmodel.CepViewModelFactory
@@ -24,7 +25,9 @@ class MainActivity : AppCompatActivity() {
 
         val viaCepService = RetrofitClient.viaCepService
         val repository = CepRepositoryImpl(viaCepService)
-        viewModel = ViewModelProvider(this, CepViewModelFactory(repository))
+        val connectivityManager = ConnectivityManager(this)
+
+        viewModel = ViewModelProvider(this, CepViewModelFactory(repository, connectivityManager))
             .get(CepViewModel::class.java)
 
         val editTextCep = findViewById<EditText>(R.id.editTextCep)
@@ -38,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.cepDetails.observe(this) { cepData ->
             if (cepData != null) {
+                // Exibe os detalhes do CEP
                 textViewDetails.text = "CEP: ${cepData.cep}\n" +
                         "Logradouro: ${cepData.logradouro}\n" +
                         "Complemento: ${cepData.complemento}\n" +
@@ -49,7 +53,25 @@ class MainActivity : AppCompatActivity() {
                         "DDD: ${cepData.ddd}\n" +
                         "SIAFI: ${cepData.siafi}\n"
             } else {
-                textViewDetails.text = "CEP não encontrado."
+                // Verifica se a mensagem de erro é relacionada à falta de conexão com a Internet
+                val errorMessage = viewModel.error.value
+                if (errorMessage != null && errorMessage.contains("Verifique sua conexão com a Internet")) {
+                    textViewDetails.text = "Sem conexão com a Internet. Por favor, verifique sua conexão e tente novamente."
+                } else {
+                    // Exibe a mensagem de erro padrão
+                    textViewDetails.text = "CEP não encontrado."
+                }
+            }
+        }
+
+
+        viewModel.error.observe(this) { errorMessage ->
+            if (!errorMessage.isNullOrBlank()) {
+                if (errorMessage.contains("Verifique sua conexão com a Internet")) {
+                    textViewDetails.text = "Sem conexão com a Internet. Por favor, verifique sua conexão e tente novamente."
+                } else {
+                    textViewDetails.text = errorMessage
+                }
             }
         }
 
