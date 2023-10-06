@@ -1,4 +1,4 @@
-package com.example.myapplication.model
+package com.example.myapplication.model.Entity
 
 import com.example.myapplication.network.ViaCepService
 import retrofit2.Retrofit

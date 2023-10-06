@@ -1,4 +1,4 @@
-package com.example.myapplication.model
+package com.example.myapplication.model.Entity
 
 data class CepData(
     val cep: String,

@@ -1,6 +1,6 @@
 package com.example.myapplication.repository
 
-import com.example.myapplication.model.CepData
+import com.example.myapplication.model.Entity.CepData
 import com.example.myapplication.network.ViaCepService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
