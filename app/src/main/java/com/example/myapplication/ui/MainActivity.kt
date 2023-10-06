@@ -3,6 +3,7 @@ package com.example.myapplication.ui
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -42,6 +43,16 @@ class MainActivity : AppCompatActivity() {
         val editTextCep = findViewById<EditText>(R.id.editTextCep)
         val buttonSearch = findViewById<Button>(R.id.buttonSearch)
         val textViewDetails = findViewById<TextView>(R.id.textViewDetails)
+
+        // Configurar um KeyListener para o EditText para detectar a tecla "Enter"
+        editTextCep.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                // A tecla "Enter" foi pressionada, execute a ação desejada aqui.
+                buttonSearch.performClick() // Isso acionará o clique do botão de pesquisa.
+                return@setOnKeyListener true
+            }
+            false
+        }
 
         buttonSearch.setOnClickListener {
             val cep = editTextCep.text.toString()

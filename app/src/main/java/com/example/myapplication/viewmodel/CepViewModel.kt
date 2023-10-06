@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.model.Entity.CepData
-import com.example.myapplication.model.Database.SearchHistory
+import com.example.myapplication.model.Entity.SearchHistory
 import com.example.myapplication.model.dao.SearchHistoryDao
 import com.example.myapplication.network.ConnectivityManager
 import com.example.myapplication.repository.CepRepository

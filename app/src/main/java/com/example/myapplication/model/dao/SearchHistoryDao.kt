@@ -3,7 +3,7 @@ package com.example.myapplication.model.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.myapplication.model.Database.SearchHistory
+import com.example.myapplication.model.Entity.SearchHistory
 
 @Dao
 interface SearchHistoryDao {

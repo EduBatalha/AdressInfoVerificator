@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
-import com.example.myapplication.model.Database.SearchHistory
+import com.example.myapplication.model.Entity.SearchHistory
 import java.text.SimpleDateFormat
 import java.util.*
 
