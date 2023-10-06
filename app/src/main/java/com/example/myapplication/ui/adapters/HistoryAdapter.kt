@@ -22,9 +22,10 @@ class HistoryAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.activity_history, parent, false)
+            .inflate(R.layout.item_history, parent, false)
         return ViewHolder(view)
     }
+
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val searchHistory = getItem(position)

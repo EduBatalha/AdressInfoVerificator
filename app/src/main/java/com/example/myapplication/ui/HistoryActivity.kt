@@ -1,11 +1,14 @@
 package com.example.myapplication.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityHistoryBinding
 import com.example.myapplication.model.Database.AppDatabase
 import com.example.myapplication.model.Entity.RetrofitClient
@@ -30,6 +33,7 @@ class HistoryActivity : AppCompatActivity() {
         binding = ActivityHistoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         recyclerView = binding.recyclerViewHistory
         historyAdapter = HistoryAdapter()
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -41,6 +45,12 @@ class HistoryActivity : AppCompatActivity() {
         val repository = CepRepositoryImpl(viaCepService)
         val searchHistoryDao = appDatabase.searchHistoryDao()
         val connectivityManager = ConnectivityManager(this)
+        val buttonReturn = findViewById<Button>(R.id.buttonReturn)
+
+        buttonReturn.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
 
 
         // Inicialize o ViewModel passando o SearchHistoryDao corretamente
