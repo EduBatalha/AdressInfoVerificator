@@ -20,7 +20,7 @@ import com.example.myapplication.viewmodel.CepViewModel
 import com.example.myapplication.viewmodel.CepViewModelFactory
 import kotlinx.coroutines.launch
 
-class HistoryActivity : AppCompatActivity() {
+class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnHistoryItemClickListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var historyAdapter: HistoryAdapter
@@ -33,9 +33,9 @@ class HistoryActivity : AppCompatActivity() {
         binding = ActivityHistoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         recyclerView = binding.recyclerViewHistory
-        historyAdapter = HistoryAdapter()
+        historyAdapter = HistoryAdapter(this)
+        historyAdapter.setOnHistoryItemClickListener(this)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = historyAdapter
 
@@ -43,14 +43,13 @@ class HistoryActivity : AppCompatActivity() {
         val appDatabase = AppDatabase.getInstance(applicationContext)
         val viaCepService = RetrofitClient.viaCepService
         val repository = CepRepositoryImpl(viaCepService)
-        val searchHistoryDao = appDatabase.searchHistoryDao()
+        searchHistoryDao = appDatabase.searchHistoryDao()
         val connectivityManager = ConnectivityManager(this)
         val buttonReturn = findViewById<Button>(R.id.buttonReturn)
 
         buttonReturn.setOnClickListener {
             onBackPressed()
         }
-
 
         // Inicialize o ViewModel passando o SearchHistoryDao corretamente
         viewModel = ViewModelProvider(
@@ -63,5 +62,12 @@ class HistoryActivity : AppCompatActivity() {
             val searchHistoryList = viewModel.getSearchHistory()
             historyAdapter.submitList(searchHistoryList)
         }
+    }
+
+    override fun onHistoryItemClicked(cep: String) {
+        // Retorne à MainActivity e pesquise automaticamente o CEP clicado
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("cepToSearch", cep)
+        startActivity(intent)
     }
 }

@@ -8,11 +8,14 @@
         android:id="@+id/textViewQuery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Histórico de Pesquisas"
         android:textSize="24sp"
+        android:textIsSelectable="true"
+        android:clickable="true"
+        android:focusable="true"
         android:layout_gravity="center"
         android:layout_marginBottom="16dp"
-        android:textIsSelectable="true"/>
+        android:layout_marginTop="25dp"
+        android:padding="8dp"/>
 
     <TextView
         android:id="@+id/textViewTimestamp"

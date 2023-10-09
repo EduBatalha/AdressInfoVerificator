@@ -48,18 +48,14 @@ class MainActivity : AppCompatActivity() {
         editTextCep.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 // A tecla "Enter" foi pressionada, execute a ação desejada aqui.
-                buttonSearch.performClick() // Isso acionará o clique do botão de pesquisa.
+                performCepSearch()
                 return@setOnKeyListener true
             }
             false
         }
 
         buttonSearch.setOnClickListener {
-            val cep = editTextCep.text.toString()
-            viewModel.fetchCepDetails(cep)
-
-            // Adicione a consulta do CEP ao histórico
-            addToSearchHistory(cep)
+            performCepSearch()
         }
 
         val buttonHistory = findViewById<Button>(R.id.searchHistory)
@@ -104,6 +100,15 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun performCepSearch() {
+        val editTextCep = findViewById<EditText>(R.id.editTextCep)
+        val cep = editTextCep.text.toString()
+        viewModel.fetchCepDetails(cep)
+
+        // Adicione a consulta do CEP ao histórico
+        addToSearchHistory(cep)
     }
 
     private fun addToSearchHistory(cep: String) {
