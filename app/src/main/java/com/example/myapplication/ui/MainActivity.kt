@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var buttonSearch: Button
     private lateinit var textViewDetails: TextView
 
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +38,8 @@ class MainActivity : AppCompatActivity() {
         val appDatabase = AppDatabase.getInstance(applicationContext)
         val searchHistoryDao = appDatabase.searchHistoryDao()
         val connectivityManager = ConnectivityManager(this)
+        val buttonSearch = findViewById<Button>(R.id.buttonSearch)
+
 
         viewModel = ViewModelProvider(
             this,
@@ -44,14 +47,16 @@ class MainActivity : AppCompatActivity() {
         ).get(CepViewModel::class.java)
 
         editTextCep = findViewById(R.id.editTextCep)
-        buttonSearch = findViewById(R.id.buttonSearch)
         textViewDetails = findViewById(R.id.textViewDetails)
 
-        // Adicione este código para preencher o EditText com o valor do CEP
+        // Preencher o EditText com o valor do CEP
         val intent = intent
         val cepToSearch = intent.getStringExtra("cepToSearch")
         if (!cepToSearch.isNullOrBlank()) {
             editTextCep.setText(cepToSearch)
+
+            // Após definir o valor do EditText, execute a pesquisa
+            performCepSearch()
         }
 
         editTextCep.setOnKeyListener { _, keyCode, event ->
@@ -86,7 +91,6 @@ class MainActivity : AppCompatActivity() {
                         "DDD: ${cepData.ddd}\n" +
                         "SIAFI: ${cepData.siafi}\n"
 
-                buttonSearch.isEnabled = false
             } else {
                 val errorMessage = viewModel.error.value
                 if (errorMessage != null && errorMessage.contains("Verifique sua conexão com a Internet")) {
@@ -95,8 +99,6 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     textViewDetails.text = "CEP não encontrado."
                 }
-
-                buttonSearch.isEnabled = true
             }
         }
 
@@ -108,8 +110,6 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     textViewDetails.text = errorMessage
                 }
-
-                buttonSearch.isEnabled = true
             }
         }
     }
