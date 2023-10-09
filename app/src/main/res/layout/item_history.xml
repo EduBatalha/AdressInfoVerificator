@@ -8,11 +8,17 @@
         android:id="@+id/textViewQuery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Histórico de Pesquisas"
         android:textSize="24sp"
+        android:textIsSelectable="true"
+        android:clickable="true"
+        android:focusable="true"
         android:layout_gravity="center"
         android:layout_marginBottom="16dp"
-        android:textIsSelectable="true"/>
+        android:layout_marginTop="25dp"
+        android:padding="8dp"
+        android:background="@drawable/rounded_background"
+        android:textColor="@color/white"
+        />
 
     <TextView
         android:id="@+id/textViewTimestamp"
@@ -22,5 +28,9 @@
         android:textColor="@android:color/darker_gray"
         android:textIsSelectable="true"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@drawable/purple_line" />
 
 </LinearLayout>

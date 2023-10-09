@@ -2,7 +2,9 @@ package com.example.myapplication.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -20,7 +22,7 @@ import com.example.myapplication.viewmodel.CepViewModel
 import com.example.myapplication.viewmodel.CepViewModelFactory
 import kotlinx.coroutines.launch
 
-class HistoryActivity : AppCompatActivity() {
+class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnHistoryItemClickListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var historyAdapter: HistoryAdapter
@@ -33,9 +35,9 @@ class HistoryActivity : AppCompatActivity() {
         binding = ActivityHistoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         recyclerView = binding.recyclerViewHistory
-        historyAdapter = HistoryAdapter()
+        historyAdapter = HistoryAdapter(this)
+        historyAdapter.setOnHistoryItemClickListener(this)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = historyAdapter
 
@@ -43,15 +45,13 @@ class HistoryActivity : AppCompatActivity() {
         val appDatabase = AppDatabase.getInstance(applicationContext)
         val viaCepService = RetrofitClient.viaCepService
         val repository = CepRepositoryImpl(viaCepService)
-        val searchHistoryDao = appDatabase.searchHistoryDao()
+        searchHistoryDao = appDatabase.searchHistoryDao()
         val connectivityManager = ConnectivityManager(this)
         val buttonReturn = findViewById<Button>(R.id.buttonReturn)
 
         buttonReturn.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            onBackPressed()
         }
-
 
         // Inicialize o ViewModel passando o SearchHistoryDao corretamente
         viewModel = ViewModelProvider(
@@ -65,4 +65,23 @@ class HistoryActivity : AppCompatActivity() {
             historyAdapter.submitList(searchHistoryList)
         }
     }
+
+    override fun onHistoryItemClicked(cep: String) {
+
+        // Crie um Intent para retornar à MainActivity
+        val intent = Intent(this, MainActivity::class.java)
+
+        // Define a flag FLAG_ACTIVITY_CLEAR_TOP para encerrar a instância anterior da MainActivity
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+        // Adicione o CEP clicado como um extra
+        intent.putExtra("cepToSearch", cep)
+
+        // Inicie a MainActivity com o Intent modificado
+        startActivity(intent)
+
+        // Finalize a HistoryActivity
+        finish()
+    }
+
 }

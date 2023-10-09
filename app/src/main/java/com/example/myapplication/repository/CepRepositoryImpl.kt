@@ -12,7 +12,7 @@ class CepRepositoryImpl(private val viaCepService: ViaCepService) : CepRepositor
     override suspend fun getCepInfo(cep: String): CepData? {
         return try {
             val cepResponse = withContext(Dispatchers.IO) {
-                // Execute a chamada à API em uma corrotina com Dispatchers.IO
+                // Executa a chamada à API em uma corrotina com Dispatchers.IO
                 viaCepService.getCepDetails(cep)
             }
 
@@ -20,19 +20,18 @@ class CepRepositoryImpl(private val viaCepService: ViaCepService) : CepRepositor
                 // Verifique se a resposta não é nula
                 cepResponse
             } else {
-                // Lide com erros da API, se necessário
                 null
             }
         } catch (e: HttpException) {
-            // Lide com erros HTTP
+            // Lida com erros HTTP
             e.printStackTrace()
             null
         } catch (e: IOException) {
-            // Lide com exceções de rede
+            // Lida com exceções de rede
             e.printStackTrace()
             null
         } catch (e: Exception) {
-            // Lide com outras exceções
+            // Lida com outras exceções
             e.printStackTrace()
             null
         }

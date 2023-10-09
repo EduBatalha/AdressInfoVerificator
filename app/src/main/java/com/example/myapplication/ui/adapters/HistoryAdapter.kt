@@ -12,7 +12,11 @@ import com.example.myapplication.model.Entity.SearchHistory
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HistoryAdapter :
+interface HistoryItemClickListener {
+    fun onHistoryItemClicked(cep: String)
+}
+
+class HistoryAdapter(private var clickListener: HistoryItemClickListener) :
     ListAdapter<SearchHistory, HistoryAdapter.ViewHolder>(SearchHistoryDiffCallback()) {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -26,10 +30,14 @@ class HistoryAdapter :
         return ViewHolder(view)
     }
 
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val searchHistory = getItem(position)
         holder.queryTextView.text = searchHistory.query
+
+        // Configurar o clique no TextView
+        holder.queryTextView.setOnClickListener {
+            clickListener.onHistoryItemClicked(searchHistory.query)
+        }
 
         // Formate o timestamp para uma representação legível
         val timestamp = searchHistory.timestamp
@@ -37,6 +45,14 @@ class HistoryAdapter :
             .format(Date(timestamp))
 
         holder.timestampTextView.text = formattedTimestamp
+    }
+
+    interface OnHistoryItemClickListener : HistoryItemClickListener {
+        override fun onHistoryItemClicked(cep: String)
+    }
+
+    fun setOnHistoryItemClickListener(listener: OnHistoryItemClickListener) {
+        this.clickListener = listener
     }
 }
 
