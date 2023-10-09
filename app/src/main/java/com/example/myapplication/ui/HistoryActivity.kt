@@ -67,13 +67,21 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnHistoryItemClickLi
     }
 
     override fun onHistoryItemClicked(cep: String) {
-        Log.d("HistoryActivity", "Item clicado: $cep")
+
+        // Crie um Intent para retornar à MainActivity
         val intent = Intent(this, MainActivity::class.java)
+
+        // Define a flag FLAG_ACTIVITY_CLEAR_TOP para encerrar a instância anterior da MainActivity
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+        // Adicione o CEP clicado como um extra
         intent.putExtra("cepToSearch", cep)
-        Log.d("HistoryActivity", "CEP para pesquisa: $cep")
+
+        // Inicie a MainActivity com o Intent modificado
         startActivity(intent)
+
+        // Finalize a HistoryActivity
+        finish()
     }
-
-
 
 }
