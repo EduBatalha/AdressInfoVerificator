@@ -48,8 +48,7 @@ class HistoryActivity : AppCompatActivity() {
         val buttonReturn = findViewById<Button>(R.id.buttonReturn)
 
         buttonReturn.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            onBackPressed()
         }
 
 
