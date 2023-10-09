@@ -2,7 +2,9 @@ package com.example.myapplication.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -65,9 +67,13 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnHistoryItemClickLi
     }
 
     override fun onHistoryItemClicked(cep: String) {
-        // Retorne à MainActivity e pesquise automaticamente o CEP clicado
+        Log.d("HistoryActivity", "Item clicado: $cep")
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("cepToSearch", cep)
+        Log.d("HistoryActivity", "CEP para pesquisa: $cep")
         startActivity(intent)
     }
+
+
+
 }

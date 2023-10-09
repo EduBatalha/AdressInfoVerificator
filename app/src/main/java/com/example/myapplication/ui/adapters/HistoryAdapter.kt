@@ -36,7 +36,7 @@ class HistoryAdapter(private var clickListener: HistoryItemClickListener) :
 
         // Configurar o clique no TextView
         holder.queryTextView.setOnClickListener {
-            clickListener?.onHistoryItemClicked(searchHistory.query)
+            clickListener.onHistoryItemClicked(searchHistory.query)
         }
 
         // Formate o timestamp para uma representação legível
@@ -50,10 +50,10 @@ class HistoryAdapter(private var clickListener: HistoryItemClickListener) :
     interface OnHistoryItemClickListener : HistoryItemClickListener {
         override fun onHistoryItemClicked(cep: String)
     }
+
     fun setOnHistoryItemClickListener(listener: OnHistoryItemClickListener) {
         this.clickListener = listener
     }
-
 }
 
 class SearchHistoryDiffCallback : DiffUtil.ItemCallback<SearchHistory>() {

@@ -3,6 +3,7 @@ package com.example.myapplication.ui
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.widget.Button
 import android.widget.EditText
@@ -13,7 +14,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
 import com.example.myapplication.model.Database.AppDatabase
 import com.example.myapplication.model.Entity.RetrofitClient
-import com.example.myapplication.model.dao.SearchHistoryDao
 import com.example.myapplication.network.ConnectivityManager
 import com.example.myapplication.repository.CepRepositoryImpl
 import com.example.myapplication.viewmodel.CepViewModel
@@ -23,6 +23,9 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: CepViewModel
+    private lateinit var editTextCep: EditText
+    private lateinit var buttonSearch: Button
+    private lateinit var textViewDetails: TextView
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,14 +43,19 @@ class MainActivity : AppCompatActivity() {
             CepViewModelFactory(repository, connectivityManager, searchHistoryDao)
         ).get(CepViewModel::class.java)
 
-        val editTextCep = findViewById<EditText>(R.id.editTextCep)
-        val buttonSearch = findViewById<Button>(R.id.buttonSearch)
-        val textViewDetails = findViewById<TextView>(R.id.textViewDetails)
+        editTextCep = findViewById(R.id.editTextCep)
+        buttonSearch = findViewById(R.id.buttonSearch)
+        textViewDetails = findViewById(R.id.textViewDetails)
 
-        // Configurar um KeyListener para o EditText para detectar a tecla "Enter"
+        // Adicione este código para preencher o EditText com o valor do CEP
+        val intent = intent
+        val cepToSearch = intent.getStringExtra("cepToSearch")
+        if (!cepToSearch.isNullOrBlank()) {
+            editTextCep.setText(cepToSearch)
+        }
+
         editTextCep.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                // A tecla "Enter" foi pressionada, execute a ação desejada aqui.
                 performCepSearch()
                 return@setOnKeyListener true
             }
@@ -67,7 +75,6 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.cepDetails.observe(this) { cepData ->
             if (cepData != null) {
-                // Exibe os detalhes do CEP
                 textViewDetails.text = "CEP: ${cepData.cep}\n" +
                         "Logradouro: ${cepData.logradouro}\n" +
                         "Complemento: ${cepData.complemento}\n" +
@@ -78,41 +85,43 @@ class MainActivity : AppCompatActivity() {
                         "GIA: ${cepData.gia}\n" +
                         "DDD: ${cepData.ddd}\n" +
                         "SIAFI: ${cepData.siafi}\n"
+
+                buttonSearch.isEnabled = false
             } else {
-                // Verifica se a mensagem de erro é relacionada à falta de conexão com a Internet
                 val errorMessage = viewModel.error.value
                 if (errorMessage != null && errorMessage.contains("Verifique sua conexão com a Internet")) {
-                    textViewDetails.text = "Sem conexão com a Internet. Por favor, verifique sua conexão e tente novamente."
+                    textViewDetails.text =
+                        "Sem conexão com a Internet. Por favor, verifique sua conexão e tente novamente."
                 } else {
-                    // Exibe a mensagem de erro padrão
                     textViewDetails.text = "CEP não encontrado."
                 }
+
+                buttonSearch.isEnabled = true
             }
         }
 
-        // Mantenha o método para lidar com mensagens de erro
         viewModel.error.observe(this) { errorMessage ->
             if (!errorMessage.isNullOrBlank()) {
                 if (errorMessage.contains("Verifique sua conexão com a Internet")) {
-                    textViewDetails.text = "Sem conexão com a Internet. Por favor, verifique sua conexão e tente novamente."
+                    textViewDetails.text =
+                        "Sem conexão com a Internet. Por favor, verifique sua conexão e tente novamente."
                 } else {
                     textViewDetails.text = errorMessage
                 }
+
+                buttonSearch.isEnabled = true
             }
         }
     }
 
     private fun performCepSearch() {
-        val editTextCep = findViewById<EditText>(R.id.editTextCep)
         val cep = editTextCep.text.toString()
         viewModel.fetchCepDetails(cep)
-
-        // Adicione a consulta do CEP ao histórico
         addToSearchHistory(cep)
     }
 
     private fun addToSearchHistory(cep: String) {
-        // Adicione o CEP ao histórico no banco de dados
+        Log.d("MainActivity", "CEP adicionado ao histórico: $cep")
         viewModel.viewModelScope.launch {
             viewModel.insertSearchHistory(cep)
         }
